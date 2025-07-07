@@ -12,7 +12,6 @@ server.on("connection", (socket) => {
   socket.on("data", (data) => {
     const dataStr = data.toString("utf-8");
     const [id, msgParts] = dataStr.split("-message-");
-    debugger;
     clients.map((client) => {
       client.socket.write(`> user ${id}: ${msgParts} `);
     });

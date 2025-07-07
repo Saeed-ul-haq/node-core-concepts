@@ -36,15 +36,13 @@ const socket = net.createConnection(
       await clearLine(0);
       socket.write(`${id}-message-${message}`);
     };
-    await ask();
+    ask();
 
     socket.on("data", async (data) => {
       console.log();
       await moveCursorUp(-1);
       await clearLine(0);
-      debugger;
       if (data.toString("utf-8").substring(0, 3) === "id-") {
-        debugger;
         // when we are getting the id-
         id = data.toString("utf-8").substring(3);
         console.log(`Your id is ${id}\n`);
