@@ -2,6 +2,10 @@ const net = require("net");
 
 const server = net.createServer();
 
+// specific port and IP address for AWS EC2 instance
+
+const PORT = 4020;
+const ADDRESS = "172.31.47.134"; // Private IP address
 // an array of client sockets
 const clients = [];
 
@@ -35,6 +39,6 @@ server.on("connection", (socket) => {
   clients.push({ id: clientId, socket });
 });
 
-server.listen(3000, "127.0.0.1", () => {
+server.listen(PORT, ADDRESS, () => {
   console.log("opened server on", server.address());
 });
