@@ -9,17 +9,26 @@ const server = net.createServer();
 server.on("connection", async (socket) => {
   console.log("A new connection has been made");
   const fileHandle = await fs.open(path, "w");
-  const fileStream = fileHandle.createWriteStream();
+  const fileWriteStream = fileHandle.createWriteStream();
+
   socket.on("data", async (data) => {
-    console.log(fileStream.writableHighWaterMark);
-    fileStream.write(data);
-    // write return false if buffers is full
+    if (!fileWriteStream.write(data)) {
+      socket.pause();
+    }
   });
 
-  socket.on("end", () => {
-    fileHandle.close();
-    console.log("Connectionn closed ");
+  fileWriteStream.on("drain", () => {
+    socket.resume();
   });
+
+  const cleanup = () => {
+    fileHandle.close();
+    console.log("Connection closed");
+  };
+
+  socket.on("end", cleanup);
+  socket.on("error", cleanup);
+  fileWriteStream.on("error", cleanup);
 });
 
 server.listen(PORT, HOST, (add) => {
