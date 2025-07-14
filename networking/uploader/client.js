@@ -1,20 +1,22 @@
 // client.js
 const net = require("net");
 const fs = require("node:fs/promises");
-
+const path = require("node:path");
 // specific port and IP address for AWS EC2 instance
 const PORT = 5050;
 const HOST = "::1";
-const path = "text.txt";
 
 const socket = net.createConnection({ host: HOST, port: PORT }, async () => {
   console.log("Connected to the server!");
+  console.log("File is Reading ...");
 
+  const filePath = process.argv[2];
+  const fileName = path.basename(filePath);
   //Reading from the source file
-  fs.open(path, "r")
+  fs.open(filePath, "r")
     .then((fileHandle) => {
       const fileReadStream = fileHandle.createReadStream();
-
+      socket.write(`fileName: ${fileName}------`);
       fileReadStream.on("data", (data) => {
         if (!socket.write(data)) {
           fileReadStream.pause();
@@ -26,7 +28,7 @@ const socket = net.createConnection({ host: HOST, port: PORT }, async () => {
       });
 
       fileReadStream.on("end", () => {
-        console.log("Connection was ended!");
+        console.log("File read successfully!");
         socket.end();
       });
     })
