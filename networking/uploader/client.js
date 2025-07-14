@@ -13,11 +13,19 @@ const socket = net.createConnection({ host: HOST, port: PORT }, async () => {
   //Reading from the source file
   fs.open(path, "r")
     .then((fileHandle) => {
-      const fileStream = fileHandle.createReadStream();
-      fileStream.on("data", (data) => {
-        socket.write(data);
+      const fileReadStream = fileHandle.createReadStream();
+
+      fileReadStream.on("data", (data) => {
+        if (!socket.write(data)) {
+          fileReadStream.pause();
+        }
       });
-      fileStream.on("end", () => {
+
+      socket.on("drain", () => {
+        fileReadStream.resume();
+      });
+
+      fileReadStream.on("end", () => {
         console.log("Connection was ended!");
         socket.end();
       });
