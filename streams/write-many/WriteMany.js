@@ -11,7 +11,7 @@ const fs = require("node:fs/promises");
     // await fileHandle.writeFile("Hello World");
     const stream = fileHandle.createWriteStream();
 
-    const numberOfWrites = 100000000;
+    const numberOfWrites = 500000000; // 50 millions
     let i = 0;
     const writeMany = () => {
       // stream.write("\n");
