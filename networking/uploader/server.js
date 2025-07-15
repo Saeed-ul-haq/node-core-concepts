@@ -22,9 +22,10 @@ server.on("connection", async (socket) => {
       fileWriteStream.on("drain", () => {
         socket.resume();
       });
-    }
-    if (!fileWriteStream.write(data)) {
-      socket.pause();
+    } else {
+      if (!fileWriteStream.write(data)) {
+        socket.pause();
+      }
     }
   });
 
@@ -35,6 +36,8 @@ server.on("connection", async (socket) => {
 
   socket.on("end", () => {
     fileHandle && fileHandle.close();
+    fileHandle = undefined;
+    fileWriteStream = undefined;
     console.log("Connection closed");
   });
 

@@ -2,3 +2,6 @@ node-module
 networking/uploader/storage/test.txt
 networking/uploader/text.txt
 networking/uploader/.DS_Store
+networking/uploader/storage/server-copy.docs
+networking/uploader/storage/server.docs
+networking/uploader/server-copy.docs
